@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { GlobalContext } from "../App";
+import { TransactionContext } from "../context/TransactionContext";
 import numberWithCommas from "../utils/format";
 
 const Expenses = () => {
-  const { transactions } = useContext(GlobalContext);
+  const { transactions } = useContext(TransactionContext);
 
   const amounts = transactions.map((transaction) => transaction.amount);
 

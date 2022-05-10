@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { GlobalContext } from "../App";
+import { TransactionContext } from "../context/TransactionContext";
 import numberWithCommas from "../utils/format";
 
 const Transactions = ({ transaction }) => {
-  const { removeTransaction } = useContext(GlobalContext);
+  const { removeTransaction } = useContext(TransactionContext);
   const sign = transaction.amount < 0 ? "-" : "+";
   return (
     <>

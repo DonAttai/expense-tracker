@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import Transactions from "./Transactions";
-import { GlobalContext } from "../App";
+import { TransactionContext } from "../context/TransactionContext";
 
 const TransactionList = () => {
-  const { transactions, getTransactions } = useContext(GlobalContext);
+  const { transactions, getTransactions } = useContext(TransactionContext);
   useEffect(() => {
     getTransactions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
