@@ -20,9 +20,8 @@ const Expenses = () => {
   ).toFixed(2);
 
   return (
-    <div className="col col-md-4 mx-auto">
+    <div className="col col-md-6 mx-auto">
       <div className="card card-body">
-        {/* <div className="container"> */}
         <div className="row">
           <div className="col text-center">
             <h5>INCOME</h5>
@@ -30,7 +29,7 @@ const Expenses = () => {
               N{numberWithCommas(income)}
             </p>
           </div>
-          <div className="text-muted ">|</div>
+          <div className="text-muted display-4 d-none d-sm-block">|</div>
           <div className="col text-center">
             <h5>EXPENSES</h5>
             <p className="text-danger font-weight-bold ">
@@ -38,7 +37,6 @@ const Expenses = () => {
             </p>
           </div>
         </div>
-        {/* </div> */}
       </div>
     </div>
   );

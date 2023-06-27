@@ -18,16 +18,17 @@ const reducer = (state, action) => {
         transactions: [...state.transactions, action.payload],
       };
       return newTransaction;
-    case "NO_TRANSACTION":
+    case "SET_MODAL":
       return {
         ...state,
-        modalContent: "Please, Add Transaction",
+        isModalOpen: !state.isModalOpen,
       };
-    case "TRANSACTION_ERROR":
+    case "SET_LOADING":
       return {
         ...state,
-        error: action.payload,
+        isLoading: !state.isLoading,
       };
+
     default:
       return state;
   }

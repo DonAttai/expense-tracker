@@ -1,10 +1,13 @@
 import React, { createContext, useReducer } from "react";
+import { mutate } from "swr";
 import reducer from "./reducer";
-import axios from "axios";
+
+import axiosInstance, { deleteTransaction, addTransaction } from "../api/axios";
+import { toast } from "react-toastify";
 const initialState = {
   transactions: [],
-  modalContent: "",
-  error: null,
+  isModalOpen: false,
+  isLoading: false,
 };
 
 export const TransactionContext = createContext(initialState);
@@ -13,77 +16,59 @@ export const TransactionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // ACTIONS
-  const getTransactions = async () => {
-    try {
-      const res = await axios.get(
-        "https://attai-expense-tracker.herokuapp.com/api/transactions"
-      );
-      dispatch({
-        type: "GET_TRANSACTIONS",
-        payload: res.data.data,
-      });
-    } catch (error) {
-      dispatch({
-        type: "TRANSACTION_ERROR",
-        payload: error.response.data.error,
-      });
-    }
+
+  const setModal = () => {
+    dispatch({ type: "SET_MODAL" });
   };
-  const removeTransaction = async (id) => {
+
+  const setLoading = () => {
+    dispatch({ type: "SET_LOADING" });
+  };
+
+  const fetcher = async (url) => {
+    const res = await axiosInstance.get(url);
+    return res.data.data;
+  };
+
+  const removeTransactionMutation = async (id, item) => {
     try {
-      await axios.delete(
-        `https://attai-expense-tracker.herokuapp.com/api/transactions/${id}`
-      );
+      await deleteTransaction(id);
+      mutate("/transactions", true);
       dispatch({
         type: "REMOVE_TRANSACTION",
         payload: id,
       });
+      toast(`${item} transaction removed`, { type: "success" });
     } catch (error) {
-      dispatch({
-        type: "TRANSACTION_ERROR",
-        payload: error.response.data.error,
-      });
+      toast(error.response?.data.error.message, { type: "error" });
     }
   };
 
-  const addTransaction = async (transaction) => {
+  const addTransactionMutation = async (transaction, item) => {
     try {
-      const url =
-        "https://attai-expense-tracker.herokuapp.com/api/transactions/";
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const res = await axios.post(url, transaction, config);
+      const data = await addTransaction(transaction);
+      mutate("/transactions", true);
       dispatch({
         type: "ADD_TRANSACTION",
-        payload: res.data.data,
+        payload: data,
       });
+      toast(`${item} transaction was added`, { type: "success" });
     } catch (error) {
-      dispatch({
-        type: "TRANSACTION_ERROR",
-        payload: error.response.data.error,
-      });
+      toast(error.response?.data.error.message, { type: "error" });
     }
-  };
-
-  const noTransaction = () => {
-    dispatch({
-      type: "NO_TRANSACTION",
-    });
   };
 
   return (
     <TransactionContext.Provider
       value={{
-        transactions: state.transactions,
-        modalContent: state.modalContent,
-        error: state.error,
-        getTransactions,
-        removeTransaction,
-        addTransaction,
-        noTransaction,
+        ...state,
+        setLoading,
+        setModal,
+        dispatch,
+        fetcher,
+        // getTransactions,
+        removeTransactionMutation,
+        addTransactionMutation,
       }}
     >
       {children}

@@ -1,29 +1,32 @@
 import React, { useState, useContext } from "react";
 import { TransactionContext } from "../context/TransactionContext";
+import { toast } from "react-toastify";
 
 const AddTransaction = () => {
   const [item, setItem] = useState("");
   const [amount, setAmount] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { addTransaction, noTransaction } = useContext(TransactionContext);
+  const { addTransactionMutation } = useContext(TransactionContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (item && amount) {
-      const newTransaction = {
-        id: new Date().getTime().toString(),
-        item,
-        amount: +amount,
-      };
-      addTransaction(newTransaction);
-      setItem("");
-      setAmount("");
-    } else {
-      noTransaction();
+    if (!(item && amount)) {
+      toast("Enter Amount and Item", { type: "info" });
+      return;
     }
+    const newTransaction = {
+      item,
+      amount: +amount,
+    };
+    setIsLoading((prev) => !prev);
+    await addTransactionMutation(newTransaction, item);
+    setIsLoading((prev) => !prev);
+    setItem("");
+    setAmount("");
   };
   return (
-    <div className="col col-md-4 mx-auto mt-3">
+    <div className="col col-md-6 mx-auto mt-3">
       <h5 className="mt-3">Add Transaction</h5>
       <hr className="mt-0 mb-1" />
       <form>
@@ -52,8 +55,9 @@ const AddTransaction = () => {
           <button
             className="btn btn-sm btn-success btn-block mt-2"
             onClick={handleSubmit}
+            disabled={isLoading}
           >
-            Add Transaction
+            {isLoading ? "Wait..." : "Add Transaction"}
           </button>
         </div>
       </form>

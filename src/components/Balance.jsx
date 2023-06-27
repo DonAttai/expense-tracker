@@ -11,8 +11,8 @@ const Balance = () => {
     .toFixed(2);
   return (
     <div className="row">
-      <div className="col col-md-4 mx-auto">
-        <div className="text-left">
+      <div className="col col-md-6 mx-auto">
+        <div className="text-left px-2">
           <h5 className="mb-0 ">Your Balance</h5>
           <h3>N{numberWithCommas(balance)}</h3>
         </div>
