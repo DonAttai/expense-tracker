@@ -6,7 +6,6 @@ import axiosInstance, { deleteTransaction, addTransaction } from "../api/axios";
 import { toast } from "react-toastify";
 const initialState = {
   transactions: [],
-  isModalOpen: false,
   isLoading: false,
 };
 
@@ -16,10 +15,6 @@ export const TransactionProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // ACTIONS
-
-  const setModal = () => {
-    dispatch({ type: "SET_MODAL" });
-  };
 
   const setLoading = () => {
     dispatch({ type: "SET_LOADING" });
@@ -63,10 +58,8 @@ export const TransactionProvider = ({ children }) => {
       value={{
         ...state,
         setLoading,
-        setModal,
         dispatch,
         fetcher,
-        // getTransactions,
         removeTransactionMutation,
         addTransactionMutation,
       }}

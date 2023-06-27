@@ -18,11 +18,7 @@ const reducer = (state, action) => {
         transactions: [...state.transactions, action.payload],
       };
       return newTransaction;
-    case "SET_MODAL":
-      return {
-        ...state,
-        isModalOpen: !state.isModalOpen,
-      };
+
     case "SET_LOADING":
       return {
         ...state,
