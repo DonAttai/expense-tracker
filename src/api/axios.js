@@ -7,8 +7,10 @@ const API_URL = () => {
   return process.env.REACT_APP_API_URL;
 };
 
+const URL = API_URL();
+
 const axiosInstance = axios.create({
-  baseURL: API_URL(),
+  baseURL: `${URL}/api`,
   headers: {
     "Content-Type": "application/json",
   },
